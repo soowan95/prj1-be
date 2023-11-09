@@ -6,6 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -13,7 +18,15 @@ public class BoardService {
 
   private final BoardMapper mapper;
 
-  public void save(Board board) {
-    mapper.insert(board);
+  public boolean save(Board board) {
+    return mapper.insert(board) == 1;
+  }
+
+  public boolean validate(Board board) {
+    if (board == null) return false;
+    if (board.getTitle().isEmpty() || board.getTitle().isBlank()) return false;
+    if (board.getContent().isEmpty() || board.getContent().isBlank()) return false;
+    if (board.getWriter().isEmpty() || board.getWriter().isBlank()) return false;
+    return true;
   }
 }

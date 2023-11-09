@@ -9,7 +9,7 @@ public interface BoardMapper {
 
   @Insert("""
   INSERT INTO board (title, content, writer)
-  VALUES (#{write.title}, #{write.content}, #{write.writer})
+  VALUES (#{title}, #{content}, #{writer})
   """)
   int insert(Board board);
 }

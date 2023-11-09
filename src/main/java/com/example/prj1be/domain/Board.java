@@ -7,5 +7,7 @@ import java.util.Map;
 @Data
 public class Board {
 
-  private Map<String, String> write;
+  private String title;
+  private String content;
+  private String writer;
 }
