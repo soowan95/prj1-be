@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -28,5 +29,9 @@ public class BoardService {
     if (board.getContent().isEmpty() || board.getContent().isBlank()) return false;
     if (board.getWriter().isEmpty() || board.getWriter().isBlank()) return false;
     return true;
+  }
+
+  public List<Board> list() {
+    return mapper.selectAll();
   }
 }
