@@ -30,4 +30,21 @@ public class BoardController {
   public List<Board> list() {
     return service.list();
   }
+
+  @GetMapping("id/{id}")
+  public Board get(@PathVariable Integer id) {
+    return service.get(id);
+  }
+
+  @DeleteMapping("remove/{id}")
+  public ResponseEntity remove(@PathVariable Integer id) {
+    if (service.remove(id)) return ResponseEntity.ok().build();
+    else return ResponseEntity.badRequest().build();
+  }
+
+  @PutMapping("update/{id}")
+  public ResponseEntity update(@PathVariable Integer id, @RequestBody Board board) {
+    if (service.update(id, board)) return ResponseEntity.ok().build();
+    else return ResponseEntity.badRequest().build();
+  }
 }

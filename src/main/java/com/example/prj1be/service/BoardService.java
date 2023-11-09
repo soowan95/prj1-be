@@ -3,6 +3,7 @@ package com.example.prj1be.service;
 import com.example.prj1be.dao.BoardMapper;
 import com.example.prj1be.domain.Board;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,5 +34,17 @@ public class BoardService {
 
   public List<Board> list() {
     return mapper.selectAll();
+  }
+
+  public Board get(Integer id) {
+    return mapper.selectById(id);
+  }
+
+  public boolean remove(Integer id) {
+    return mapper.deleteById(id) == 1;
+  }
+
+  public boolean update(Integer id, Board board) {
+    return mapper.updateById(id, board) == 1;
   }
 }
