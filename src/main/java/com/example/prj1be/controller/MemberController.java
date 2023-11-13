@@ -51,7 +51,19 @@ public class MemberController {
   }
 
   @GetMapping
-  public void view(String id) {
-    System.out.println("id = " + id);
+  public ResponseEntity<Member> view(String id) {
+    // todo: 로그인 했는지? -> 안했으면 401 응답
+    // todo: 자기 정보인지? -> 아니면 403 응답
+    Member member = service.getMember(id);
+
+    return ResponseEntity.ok(member);
+  }
+
+  @DeleteMapping
+  public ResponseEntity delete(String id) {
+    // todo: 로그인 했는지? -> 안했으면 401 응답
+    // todo: 자기 정보인지? -> 아니면 403 응답
+    if (service.deleteMember(id)) return ResponseEntity.ok().build();
+    return ResponseEntity.internalServerError().build();
   }
 }
