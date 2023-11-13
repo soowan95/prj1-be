@@ -58,6 +58,10 @@ public class MemberService {
   }
 
   public boolean updateMember(String id, Member member) {
+    Member originMember = mapper.selectById(id);
+
+    if (member.getPassword().isEmpty()) member.setPassword(originMember.getPassword());
+
     return mapper.updateById(id, member) == 1;
   }
 }
