@@ -69,7 +69,9 @@ public class MemberController {
 
   @PutMapping
   public ResponseEntity update(String id, @RequestBody Member member) {
+    System.out.println(member);
     if (service.getEmail(member.getEmail()) == null && service.updateMember(id, member)) return ResponseEntity.ok().build();
+    else if (service.getEmail(member.getEmail()).equals(member.getEmail()) && service.updateMember(id, member)) return ResponseEntity.ok().build();
     return ResponseEntity.badRequest().build();
   }
 }
