@@ -38,11 +38,14 @@ public class MemberController {
 
   @GetMapping(value = "check", params = "email")
   public ResponseEntity checkEmail(String email) {
-    if (service.getEmail(email) == null) {
-      return ResponseEntity.notFound().build();
-    } else {
-      return ResponseEntity.ok().build();
-    }
+    if (service.getEmail(email) == null) return ResponseEntity.notFound().build();
+    else return ResponseEntity.ok().build();
+  }
+
+  @GetMapping(value = "check", params = "nickName")
+  public ResponseEntity checkNickName(String nickName) {
+    if (service.getNickName(nickName) == null) return ResponseEntity.notFound().build();
+    else return ResponseEntity.ok().build();
   }
 
   @GetMapping("list")
@@ -69,9 +72,8 @@ public class MemberController {
 
   @PutMapping
   public ResponseEntity update(String id, @RequestBody Member member) {
-    System.out.println(member);
-    if (service.getEmail(member.getEmail()) == null && service.updateMember(id, member)) return ResponseEntity.ok().build();
-    else if (service.getEmail(member.getEmail()).equals(member.getEmail()) && service.updateMember(id, member)) return ResponseEntity.ok().build();
+    if (service.getEmail(id, member.getEmail()) == null && service.getNickName(id, member.getNickName()) == null && service.updateMember(id, member)) return ResponseEntity.ok().build();
+    else if (service.getNickName(id, member.getNickName()) != null) return ResponseEntity.notFound().build();
     return ResponseEntity.badRequest().build();
   }
 }

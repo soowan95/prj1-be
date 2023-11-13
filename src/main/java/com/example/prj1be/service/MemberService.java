@@ -23,7 +23,22 @@ public class MemberService {
 
   public String getEmail(String email) {
     return mapper.selectEmail(email);
+  }
 
+  public String getEmail(String id, String email) {
+
+    if (mapper.selectEmailById(id).equals(email)) return null;
+    return mapper.selectEmail(email);
+  }
+
+  public String getNickName(String nickName) {
+    return mapper.selectNickName(nickName);
+  }
+
+  public String getNickName(String id, String nickName) {
+
+    if (mapper.selectNickNameById(id).equals(nickName)) return null;
+    return mapper.selectNickName(nickName);
   }
 
   public boolean validate(Member member) {
