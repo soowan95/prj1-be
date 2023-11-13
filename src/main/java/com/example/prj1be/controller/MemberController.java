@@ -66,4 +66,10 @@ public class MemberController {
     if (service.deleteMember(id)) return ResponseEntity.ok().build();
     return ResponseEntity.internalServerError().build();
   }
+
+  @PutMapping
+  public ResponseEntity update(String id, @RequestBody Member member) {
+    if (service.getEmail(member.getEmail()) == null && service.updateMember(id, member)) return ResponseEntity.ok().build();
+    return ResponseEntity.badRequest().build();
+  }
 }
