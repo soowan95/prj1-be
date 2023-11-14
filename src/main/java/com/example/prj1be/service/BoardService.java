@@ -28,7 +28,6 @@ public class BoardService {
     if (board == null) return false;
     if (board.getTitle().isEmpty() || board.getTitle().isBlank()) return false;
     if (board.getContent().isEmpty() || board.getContent().isBlank()) return false;
-    if (board.getWriter().isEmpty() || board.getWriter().isBlank()) return false;
     return true;
   }
 
