@@ -44,4 +44,10 @@ public class BoardService {
   public boolean update(Integer id, Board board) {
     return mapper.updateById(id, board) == 1;
   }
+
+  public boolean hasAccess(Integer id, Member login) {
+    Board board = mapper.selectById(id);
+
+    return board.getWriter().equals(login.getId());
+  }
 }
