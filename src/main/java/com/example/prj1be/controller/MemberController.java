@@ -58,9 +58,13 @@ public class MemberController {
   }
 
   @GetMapping
-  public ResponseEntity<Member> view(String id) {
+  public ResponseEntity<Member> view(String id, @SessionAttribute(value = "login", required = false) Member login) {
     // todo: 로그인 했는지? -> 안했으면 401 응답
     // todo: 자기 정보인지? -> 아니면 403 응답
+    if (login == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+    if (!service.hasAccess(id, login)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
     Member member = service.getMember(id);
 
     return ResponseEntity.ok(member);
@@ -79,7 +83,11 @@ public class MemberController {
   }
 
   @PutMapping
-  public ResponseEntity update(String id, @RequestBody Member member) {
+  public ResponseEntity update(String id, @RequestBody Member member, @SessionAttribute(value = "login", required = false) Member login) {
+    if (login == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+    if (!service.hasAccess(id, login)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
     if (service.getEmail(id, member.getEmail()) == null && service.getNickName(id, member.getNickName()) == null && service.updateMember(id, member))
       return ResponseEntity.ok().build();
     else if (service.getNickName(id, member.getNickName()) != null) return ResponseEntity.notFound().build();
