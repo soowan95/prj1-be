@@ -106,6 +106,15 @@ public class MemberService {
   }
 
   public boolean hasAccess(String id, Member login) {
+    if (isAdmin(login)) return true;
+
     return id.equals(login.getId());
+  }
+
+  public boolean isAdmin(Member login) {
+    if (login.getAuth() != null) {
+      return login.getAuth().stream().map(Auth::getName).anyMatch(a -> a.equals("admin"));
+    }
+    return false;
   }
 }
