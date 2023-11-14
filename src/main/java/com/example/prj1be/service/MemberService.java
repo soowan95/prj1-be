@@ -79,4 +79,10 @@ public class MemberService {
 
     return mapper.updateById(id, member) == 1;
   }
+
+  public boolean login(Member member) {
+    Member dbMember = mapper.selectById(member.getId());
+
+    return dbMember != null && dbMember.getPassword().equals(member.getPassword());
+  }
 }

@@ -3,6 +3,8 @@ package com.example.prj1be.controller;
 import com.example.prj1be.domain.Member;
 import com.example.prj1be.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,8 +74,16 @@ public class MemberController {
 
   @PutMapping
   public ResponseEntity update(String id, @RequestBody Member member) {
-    if (service.getEmail(id, member.getEmail()) == null && service.getNickName(id, member.getNickName()) == null && service.updateMember(id, member)) return ResponseEntity.ok().build();
+    if (service.getEmail(id, member.getEmail()) == null && service.getNickName(id, member.getNickName()) == null && service.updateMember(id, member))
+      return ResponseEntity.ok().build();
     else if (service.getNickName(id, member.getNickName()) != null) return ResponseEntity.notFound().build();
     return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("login")
+  public ResponseEntity login(@RequestBody Member member) {
+    System.out.println("member = " + member);
+    if (service.login(member)) ResponseEntity.ok().build();
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
 }
