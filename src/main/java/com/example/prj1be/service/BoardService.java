@@ -41,7 +41,13 @@ public class BoardService {
     return mapper.deleteById(id) == 1;
   }
 
-  public boolean update(Integer id, Board board) {
+  public boolean update(Integer id, Board board, Member login) {
+    Board dbBoard = mapper.selectById(id);
+
+    if (board.getWriter().isBlank()) board.setWriter(login.getId());
+    if (board.getTitle().isBlank()) board.setTitle(dbBoard.getTitle());
+    if (board.getContent().isBlank()) board.setContent(dbBoard.getContent());
+
     return mapper.updateById(id, board) == 1;
   }
 

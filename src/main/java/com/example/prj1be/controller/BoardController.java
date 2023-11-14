@@ -51,8 +51,12 @@ public class BoardController {
   }
 
   @PutMapping("update/{id}")
-  public ResponseEntity update(@PathVariable Integer id, @RequestBody Board board) {
-    if (service.update(id, board)) return ResponseEntity.ok().build();
+  public ResponseEntity update(@PathVariable Integer id, @RequestBody Board board, @SessionAttribute(value = "login", required = false) Member login) {
+    if (login == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+    if (!service.hasAccess(id, login)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+    if (service.update(id, board, login)) return ResponseEntity.ok().build();
     else return ResponseEntity.badRequest().build();
   }
 }
