@@ -2,16 +2,12 @@ package com.example.prj1be.service;
 
 import com.example.prj1be.dao.BoardMapper;
 import com.example.prj1be.domain.Board;
+import com.example.prj1be.domain.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +16,9 @@ public class BoardService {
 
   private final BoardMapper mapper;
 
-  public boolean save(Board board) {
+  public boolean save(Board board, Member login) {
+    board.setWriter(login.getNickName());
+
     return mapper.insert(board) == 1;
   }
 

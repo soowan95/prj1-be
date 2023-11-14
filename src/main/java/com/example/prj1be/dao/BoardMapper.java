@@ -1,8 +1,8 @@
 package com.example.prj1be.dao;
 
 import com.example.prj1be.domain.Board;
+import com.example.prj1be.domain.Member;
 import org.apache.ibatis.annotations.*;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
