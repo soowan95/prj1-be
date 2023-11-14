@@ -83,7 +83,7 @@ public class MemberController {
   @PostMapping("login")
   public ResponseEntity login(@RequestBody Member member) {
     System.out.println("member = " + member);
-    if (service.login(member)) ResponseEntity.ok().build();
+    if (service.login(member)) return ResponseEntity.ok().build();
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
 }
