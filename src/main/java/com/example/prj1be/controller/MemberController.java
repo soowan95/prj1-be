@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.List;
 
@@ -81,9 +82,8 @@ public class MemberController {
   }
 
   @PostMapping("login")
-  public ResponseEntity login(@RequestBody Member member) {
-    System.out.println("member = " + member);
-    if (service.login(member)) return ResponseEntity.ok().build();
+  public ResponseEntity login(@RequestBody Member member, WebRequest request) {
+    if (service.login(member, request)) return ResponseEntity.ok().build();
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
 }
