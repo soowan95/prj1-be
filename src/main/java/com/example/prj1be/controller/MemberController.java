@@ -97,6 +97,11 @@ public class MemberController {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
 
+  @GetMapping("login")
+  public Member login(@SessionAttribute(value = "login", required = false) Member login) {
+    return login;
+  }
+
   @PostMapping("logout")
   public void logout(HttpSession session) {
     if (session != null) session.invalidate();

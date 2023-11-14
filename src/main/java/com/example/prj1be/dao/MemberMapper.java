@@ -1,5 +1,6 @@
 package com.example.prj1be.dao;
 
+import com.example.prj1be.domain.Auth;
 import com.example.prj1be.domain.Member;
 import org.apache.ibatis.annotations.*;
 
@@ -70,4 +71,11 @@ public interface MemberMapper {
   WHERE id = #{id}
   """)
   int updateById(String id, Member member);
+
+  @Select("""
+  SELECT *
+  FROM auth
+  WHERE memberId = #{id}
+  """)
+  List<Auth> selectAuthById(String id);
 }
