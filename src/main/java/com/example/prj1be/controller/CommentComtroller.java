@@ -3,7 +3,9 @@ package com.example.prj1be.controller;
 import com.example.prj1be.domain.Comment;
 import com.example.prj1be.domain.Member;
 import com.example.prj1be.service.CommentService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +32,17 @@ public class CommentComtroller {
   @GetMapping("list/{id}")
   public List<Comment> list(@PathVariable("id") Integer boardId) {
     return service.list(boardId);
+  }
+
+  @DeleteMapping("delete")
+  public ResponseEntity delete(Integer id) {
+    if (service.delete(id)) return ResponseEntity.ok().build();
+    return ResponseEntity.internalServerError().build();
+  }
+
+  @PutMapping("update")
+  public ResponseEntity update(@RequestBody Comment comment) {
+    if (service.update(comment)) return ResponseEntity.ok().build();
+    return ResponseEntity.internalServerError().build();
   }
 }

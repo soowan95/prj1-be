@@ -6,6 +6,7 @@ import com.example.prj1be.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,5 +33,14 @@ public class CommentService {
 
   public List<Comment> list(Integer boardId) {
     return mapper.selectByBoardId(boardId);
+  }
+
+  public boolean delete(Integer id) {
+    return mapper.deleteById(id) == 1;
+  }
+
+  public boolean update(Comment comment) {
+
+    return mapper.updateById(comment) == 1;
   }
 }
