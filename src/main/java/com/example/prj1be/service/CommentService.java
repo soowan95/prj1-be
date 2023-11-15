@@ -6,6 +6,8 @@ import com.example.prj1be.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -26,5 +28,9 @@ public class CommentService {
     if (comment.getComment().isEmpty() || comment.getComment().isBlank()) return false;
 
     return true;
+  }
+
+  public List<Comment> list(Integer boardId) {
+    return mapper.selectByBoardId(boardId);
   }
 }
