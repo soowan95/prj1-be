@@ -78,4 +78,11 @@ public interface MemberMapper {
   WHERE memberId = #{id}
   """)
   List<Auth> selectAuthById(String id);
+
+  @Select("""
+  SELECT b.id
+  FROM member m JOIN board b ON m.id = b.writer
+  WHERE m.id = #{id}
+  """)
+  List<Integer> selectBoardIdById(String id);
 }

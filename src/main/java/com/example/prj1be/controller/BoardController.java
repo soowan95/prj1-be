@@ -46,7 +46,7 @@ public class BoardController {
 
     if (!service.hasAccess(id, login)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-    if (service.remove(id)) return ResponseEntity.ok().build();
+    if (service.delete(id)) return ResponseEntity.ok().build();
     else return ResponseEntity.badRequest().build();
   }
 

@@ -40,4 +40,16 @@ public interface CommentMapper {
   WHERE boardId = #{boardId}
   """)
   int countByBoardId(Integer boardId);
+
+  @Delete("""
+  DELETE FROM comment
+  WHERE memberId = #{id}
+  """)
+  void deleteByWriter(String id);
+
+  @Delete("""
+  DELETE FROM comment
+  WHERE boardId = #{id}
+  """)
+  void deleteByBoardId(Integer id);
 }
