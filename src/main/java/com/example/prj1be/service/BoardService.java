@@ -62,4 +62,8 @@ public class BoardService {
 
     return board.getWriter().equals(login.getId());
   }
+
+  public boolean isLike(Integer id, String memberId) {
+    return mapper.isLike(id, memberId) == 1;
+  }
 }

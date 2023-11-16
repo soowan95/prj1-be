@@ -15,7 +15,7 @@ public interface LikeMapper {
   int delete(Like like);
 
   @Insert("""
-  INSERT INTO boardlike
+  INSERT INTO boardlike (boardId, memberId)
   VALUES (#{boardId}, #{memberId})
   """)
   int insert(Like like);

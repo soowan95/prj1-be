@@ -16,7 +16,7 @@ public interface BoardMapper {
   int insert(Board board);
 
   @Select("""
-  SELECT b.id, b.title, writer, b.inserted, nickName, COUNT(c.id) `commentCount`
+  SELECT b.id, b.title, writer, b.inserted, nickName, COUNT(c.id) `commentCount`, (SELECT COUNT(*) FROM boardlike WHERE boardId = b.id) `likeCount`
   FROM board b JOIN member m ON b.writer = m.id
     LEFT JOIN comment c ON b.id = c.boardId
   GROUP BY b.id
@@ -49,4 +49,11 @@ public interface BoardMapper {
   WHERE writer = #{writer}
   """)
   int deleteByWriter(String writer);
+
+  @Select("""
+  SELECT COUNT(id)
+  FROM boardlike
+  WHERE boardId = #{id} AND memberId = #{memberId}
+  """)
+  Integer isLike(Integer id, String memberId);
 }

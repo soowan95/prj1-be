@@ -36,8 +36,17 @@ public class BoardController {
   }
 
   @GetMapping("id/{id}")
-  public Board get(@PathVariable Integer id) {
-    return service.get(id);
+  public Board get(@PathVariable Integer id,
+                   @SessionAttribute(value = "login", required = false) Member login) {
+    Board board = service.get(id);
+    board.setIsLike(false);
+
+    if (login != null) {
+      String memberId = login.getId();
+      board.setIsLike(service.isLike(id, memberId));
+    }
+
+    return board;
   }
 
   @DeleteMapping("remove/{id}")

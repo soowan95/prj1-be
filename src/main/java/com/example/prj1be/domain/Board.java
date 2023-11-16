@@ -15,5 +15,7 @@ public class Board {
   private String writer;
   private String nickName;
   private Integer commentCount;
+  private Integer likeCount;
   private LocalDateTime inserted;
+  private Boolean isLike;
 }
