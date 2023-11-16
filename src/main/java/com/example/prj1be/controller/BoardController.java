@@ -42,8 +42,7 @@ public class BoardController {
     board.setIsLike(false);
 
     if (login != null) {
-      String memberId = login.getId();
-      board.setIsLike(service.isLike(id, memberId));
+      board.setIsLike(service.isLike(id, login.getId()));
     }
 
     return board;
