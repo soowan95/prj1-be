@@ -11,5 +11,6 @@ public class Comment {
   private String comment;
   private String memberId;
   private Integer boardId;
+  private String nickName;
   private LocalDateTime inserted;
 }

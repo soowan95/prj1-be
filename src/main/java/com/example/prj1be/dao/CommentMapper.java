@@ -15,8 +15,8 @@ public interface CommentMapper {
   int insert(Comment comment);
 
   @Select("""
-  SELECT *
-  FROM comment
+  SELECT c.id, comment, boardId, memberId, c.inserted, nickName
+  FROM comment c JOIN member m ON c.memberId = m.id
   WHERE boardId = #{boardId}
   """)
   List<Comment> selectByBoardId(Integer boardId);
@@ -33,4 +33,11 @@ public interface CommentMapper {
   WHERE id = #{id}
   """)
   int updateById(Comment comment);
+
+  @Select("""
+  SELECT COUNT(*) `count`
+  FROM comment
+  WHERE boardId = #{boardId}
+  """)
+  int countByBoardId(Integer boardId);
 }

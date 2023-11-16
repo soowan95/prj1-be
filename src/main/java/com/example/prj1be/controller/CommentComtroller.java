@@ -34,6 +34,11 @@ public class CommentComtroller {
     return service.list(boardId);
   }
 
+  @GetMapping("count/{id}")
+  public Integer count(@PathVariable("id") Integer boardId) {
+    return service.count(boardId);
+  }
+
   @DeleteMapping("delete")
   public ResponseEntity delete(Integer id) {
     if (service.delete(id)) return ResponseEntity.ok().build();

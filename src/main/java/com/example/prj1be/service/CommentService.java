@@ -43,4 +43,8 @@ public class CommentService {
 
     return mapper.updateById(comment) == 1;
   }
+
+  public int count(Integer boardId) {
+    return mapper.countByBoardId(boardId);
+  }
 }
