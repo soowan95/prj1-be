@@ -19,4 +19,16 @@ public interface LikeMapper {
   VALUES (#{boardId}, #{memberId})
   """)
   int insert(Like like);
+
+  @Delete("""
+  DELETE FROM boardlike
+  WHERE boardId = #{id}
+  """)
+  void deleteByBoardId(Integer id);
+
+  @Delete("""
+  DELETE FROM boardlike
+  WHERE memberId = #{id}
+  """)
+  void deleteByWriter(String id);
 }
