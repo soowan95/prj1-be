@@ -21,8 +21,9 @@ public interface BoardMapper {
     LEFT JOIN comment c ON b.id = c.boardId
   GROUP BY b.id
   ORDER BY b.id DESC 
+  LIMIT #{page}, 10
   """)
-  List<Board> selectAll();
+  List<Board> selectAll(Integer page);
 
   @Select("""
   SELECT b.id, title, content, writer, b.inserted, nickName

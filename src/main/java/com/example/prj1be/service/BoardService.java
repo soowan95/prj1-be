@@ -34,8 +34,8 @@ public class BoardService {
     return true;
   }
 
-  public List<Board> list() {
-    return mapper.selectAll();
+  public List<Board> list(Integer page) {
+    return mapper.selectAll(page);
   }
 
   public Board get(Integer id) {
