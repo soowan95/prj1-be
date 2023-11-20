@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,15 +54,14 @@ public class BoardService {
   }
 
   private void upload(Integer boardId, MultipartFile file) throws IOException {
-    // 파일 저장 경로
-    // C:\Temp\prj1\게시물번호\파일명
-    File folder = new File("C:\\Temp\\prj1\\" + boardId);
-    if (!folder.exists()) folder.mkdirs();
 
-    String path = folder.getAbsolutePath() + "\\" + file.getOriginalFilename();
+    PutObjectRequest objectRequest = PutObjectRequest.builder()
+            .bucket(bucket)
+            .key(key)
+            .acl(ObjectCannedACL.PUBLIC_READ)
+            .build();
 
-    file.transferTo(new File(path));
-
+    s3.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream()));
   }
 
   public boolean validate(Board board) {
