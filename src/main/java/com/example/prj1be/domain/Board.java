@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -22,6 +23,7 @@ public class Board {
   private Integer likeCount;
   private LocalDateTime inserted;
   private Boolean isLike;
+  private List<BoardFile> files;
 
   public String getAgo() {
     return AppUtil.getAgo(inserted, LocalDateTime.now());

@@ -5,6 +5,7 @@ import com.example.prj1be.dao.CommentMapper;
 import com.example.prj1be.dao.FileMapper;
 import com.example.prj1be.dao.LikeMapper;
 import com.example.prj1be.domain.Board;
+import com.example.prj1be.domain.BoardFile;
 import com.example.prj1be.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -36,8 +38,10 @@ public class BoardService {
 
 
   private final S3Client s3;
-  @Value("${aw3.s3.bucket.name}")
+  @Value("${aws.s3.bucket.name}")
   private String bucket;
+  @Value("${image.file.prefix}")
+  private String urlPrefix;
 
   public boolean save(Board board, MultipartFile[] files, Member login) throws IOException {
 
@@ -111,7 +115,18 @@ public class BoardService {
   }
 
   public Board get(Integer id) {
-    return mapper.selectById(id);
+    Board board = mapper.selectById(id);
+
+    List<BoardFile> boardFiles = fileMapper.selectNamesByBoardId(id);
+
+    for (BoardFile boardFile : boardFiles) {
+      String url = urlPrefix + "prj1/" + id + "/" + boardFile.getName();
+      boardFile.setUrl(url);
+    }
+
+    board.setFiles(boardFiles);
+
+    return board;
   }
 
   public boolean delete(Integer id) {
