@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/board")
@@ -31,10 +33,10 @@ public class BoardController {
   }
 
   @GetMapping("list")
-  public List<Board> list(@RequestParam(value = "p", defaultValue = "1") Integer page) {
-    page = (page - 1) * 10;
+  public Map<String, Object> list(@RequestParam(value = "p", defaultValue = "1") Integer page,
+                                   @RequestParam(value = "k", defaultValue = "") String keyword) {
 
-    return service.list(page);
+    return service.list(page, keyword);
   }
 
   @GetMapping("id/{id}")

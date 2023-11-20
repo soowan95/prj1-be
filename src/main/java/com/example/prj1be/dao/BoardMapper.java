@@ -19,11 +19,12 @@ public interface BoardMapper {
   SELECT b.id, b.title, writer, b.inserted, nickName, COUNT(c.id) `commentCount`, (SELECT COUNT(*) FROM boardlike WHERE boardId = b.id) `likeCount`
   FROM board b JOIN member m ON b.writer = m.id
     LEFT JOIN comment c ON b.id = c.boardId
+  WHERE b.content LIKE #{keyword} OR b.title LIKE #{keyword}
   GROUP BY b.id
   ORDER BY b.id DESC 
   LIMIT #{page}, 10
   """)
-  List<Board> selectAll(Integer page);
+  List<Board> selectAll(Integer page, String keyword);
 
   @Select("""
   SELECT b.id, title, content, writer, b.inserted, nickName
@@ -57,4 +58,10 @@ public interface BoardMapper {
   WHERE boardId = #{id} AND memberId = #{memberId}
   """)
   Integer isLike(Integer id, String memberId);
+
+  @Select("""
+  SELECT COUNT(*) FROM board
+  WHERE title LIKE #{keyword} OR content LIKE #{keyword}
+  """)
+  int countAll(String keyword);
 }
