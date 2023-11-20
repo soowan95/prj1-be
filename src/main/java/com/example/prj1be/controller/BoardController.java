@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,8 +24,15 @@ public class BoardController {
 
   @PostMapping("add")
   public ResponseEntity add(Board board,
-                            @RequestParam(value = "file", required = false) MultipartFile file,
-                            @SessionAttribute(value = "login", required = false) Member login) {
+                            @RequestParam(value = "files[]", required = false) MultipartFile[] files,
+                            @SessionAttribute(value = "login", required = false) Member login) throws IOException {
+
+    if (files != null) {
+      Arrays.stream(files).forEach(a -> {
+        System.out.println(a.getOriginalFilename());
+        System.out.println(a.getSize());
+      });
+    }
 
     if (login == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -31,7 +40,7 @@ public class BoardController {
       return ResponseEntity.badRequest().build();
     }
 
-    if (service.save(board, login)) return ResponseEntity.ok().build();
+    if (service.save(board, files, login)) return ResponseEntity.ok().build();
     else return ResponseEntity.internalServerError().build();
   }
 
