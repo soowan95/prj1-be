@@ -7,10 +7,12 @@ import com.example.prj1be.dao.LikeMapper;
 import com.example.prj1be.domain.Board;
 import com.example.prj1be.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -30,6 +32,12 @@ public class BoardService {
   private final CommentMapper commentMapper;
   private final LikeMapper likeMapper;
   private final FileMapper fileMapper;
+
+
+
+  private final S3Client s3;
+  @Value("${aw3.s3.bucket.name}")
+  private String bucket;
 
   public boolean save(Board board, MultipartFile[] files, Member login) throws IOException {
 
@@ -55,13 +63,15 @@ public class BoardService {
 
   private void upload(Integer boardId, MultipartFile file) throws IOException {
 
+    String key = "prj1/" + boardId + "/" + file.getOriginalFilename();
+
     PutObjectRequest objectRequest = PutObjectRequest.builder()
             .bucket(bucket)
             .key(key)
             .acl(ObjectCannedACL.PUBLIC_READ)
             .build();
 
-    s3.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream()));
+    s3.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
   }
 
   public boolean validate(Board board) {
