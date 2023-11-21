@@ -1,9 +1,6 @@
 package com.example.prj1be.service;
 
-import com.example.prj1be.dao.BoardMapper;
-import com.example.prj1be.dao.CommentMapper;
-import com.example.prj1be.dao.FileMapper;
-import com.example.prj1be.dao.LikeMapper;
+import com.example.prj1be.dao.*;
 import com.example.prj1be.domain.Board;
 import com.example.prj1be.domain.BoardFile;
 import com.example.prj1be.domain.Member;
@@ -14,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -34,8 +32,6 @@ public class BoardService {
   private final CommentMapper commentMapper;
   private final LikeMapper likeMapper;
   private final FileMapper fileMapper;
-
-
 
   private final S3Client s3;
   @Value("${aws.s3.bucket.name}")
@@ -130,11 +126,32 @@ public class BoardService {
   }
 
   public boolean delete(Integer id) {
+    // 자신이 쓴 글의 댓글 지우기
     commentMapper.deleteByBoardId(id);
-
+    // 자신이 쓴 글의 좋아요 지우기
     likeMapper.deleteByBoardId(id);
+    // s3에 업로드한 파일 지우기
+    deleteFile(id);
 
     return mapper.deleteById(id) == 1;
+  }
+
+  private void deleteFile(Integer id) {
+    // 파일명 조회
+    List<BoardFile> boardFiles = fileMapper.selectNamesByBoardId(id);
+    // s3 bucket objects 지우기
+    for ( BoardFile file : boardFiles) {
+      String key = "prj1/" + id + "/" + file.getName();
+
+      DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+              .bucket(bucket)
+              .key(key)
+              .build();
+
+      s3.deleteObject(objectRequest);
+    }
+    // 자신이 쓴 글의 파일 지우기
+    fileMapper.deleteByBoardId(id);
   }
 
   public boolean update(Integer id, Board board, Member login) {

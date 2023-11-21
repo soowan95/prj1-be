@@ -1,11 +1,8 @@
 package com.example.prj1be.service;
 
-import com.example.prj1be.dao.BoardMapper;
-import com.example.prj1be.dao.CommentMapper;
-import com.example.prj1be.dao.LikeMapper;
+import com.example.prj1be.dao.*;
 import com.example.prj1be.domain.Auth;
 import com.example.prj1be.domain.Member;
-import com.example.prj1be.dao.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +20,7 @@ public class MemberService {
   private final BoardMapper boardMapper;
   private final CommentMapper commentMapper;
   private final LikeMapper likeMapper;
+  private final FileMapper fileMapper;
 
   public boolean add(Member member) {
     return mapper.insert(member) == 1;
@@ -85,11 +83,12 @@ public class MemberService {
     commentMapper.deleteByWriter(id);
     likeMapper.deleteByWriter(id);
 
-    // 1-1. 이 멤버가 작성한 게시물의 댓글, 좋아요 삭제
+    // 1-1. 이 멤버가 작성한 게시물의 댓글, 좋아요, 파일 삭제
 
     for (Integer i : mapper.selectBoardIdById(id)) {
       commentMapper.deleteByBoardId(i);
       likeMapper.deleteByBoardId(i);
+      fileMapper.deleteByBoardId(i);
     }
 
     // 1. 이 멤버가 작성한 게시물 삭제

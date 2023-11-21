@@ -21,6 +21,7 @@ public class Board {
   private String nickName;
   private Integer commentCount;
   private Integer likeCount;
+  private Integer imageCount;
   private LocalDateTime inserted;
   private Boolean isLike;
   private List<BoardFile> files;

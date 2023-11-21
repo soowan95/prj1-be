@@ -17,9 +17,13 @@ public interface BoardMapper {
   int insert(Board board);
 
   @Select("""
-  SELECT b.id, b.title, writer, b.inserted, nickName, COUNT(c.id) `commentCount`, (SELECT COUNT(*) FROM boardlike WHERE boardId = b.id) `likeCount`
+  SELECT b.id, b.title, writer, b.inserted, nickName, 
+         COUNT(DISTINCT c.id) `commentCount`, 
+         (SELECT COUNT(*) FROM boardlike WHERE boardId = b.id) `likeCount`,
+         COUNT(DISTINCT bf.id) `imageCount`
   FROM board b JOIN member m ON b.writer = m.id
     LEFT JOIN comment c ON b.id = c.boardId
+    LEFT JOIN boardfile bf ON b.id = bf.boardId
   WHERE b.content LIKE #{keyword} OR b.title LIKE #{keyword}
   GROUP BY b.id
   ORDER BY b.id DESC 
