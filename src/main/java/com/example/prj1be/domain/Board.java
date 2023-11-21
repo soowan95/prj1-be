@@ -24,6 +24,7 @@ public class Board {
   private Integer imageCount;
   private LocalDateTime inserted;
   private Boolean isLike;
+  private Boolean isFileDelete;
   private List<BoardFile> files;
 
   public String getAgo() {

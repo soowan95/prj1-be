@@ -27,13 +27,6 @@ public class BoardController {
                             @RequestParam(value = "file[]", required = false) MultipartFile[] files,
                             @SessionAttribute(value = "login", required = false) Member login) throws IOException {
 
-    if (files != null) {
-      Arrays.stream(files).forEach(a -> {
-        System.out.println(a.getOriginalFilename());
-        System.out.println(a.getSize());
-      });
-    }
-
     if (login == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
     if (!service.validate(board)) {
@@ -46,9 +39,10 @@ public class BoardController {
 
   @GetMapping("list")
   public Map<String, Object> list(@RequestParam(value = "p", defaultValue = "1") Integer page,
-                                   @RequestParam(value = "k", defaultValue = "") String keyword) {
+                                  @RequestParam(value = "k", defaultValue = "") String keyword,
+                                  @RequestParam(value = "c", defaultValue = "all") String category) {
 
-    return service.list(page, keyword);
+    return service.list(page, keyword, category);
   }
 
   @GetMapping("id/{id}")
@@ -75,12 +69,15 @@ public class BoardController {
   }
 
   @PutMapping("update/{id}")
-  public ResponseEntity update(@PathVariable Integer id, @RequestBody Board board, @SessionAttribute(value = "login", required = false) Member login) {
+  public ResponseEntity update(@PathVariable Integer id,
+                               Board board,
+                               @RequestParam(value = "file[]", required = false) MultipartFile[] files,
+                               @SessionAttribute(value = "login", required = false) Member login) throws IOException {
     if (login == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
     if (!service.hasAccess(id, login)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-    if (service.update(id, board, login)) return ResponseEntity.ok().build();
+    if (service.update(id, board, files, login)) return ResponseEntity.ok().build();
     else return ResponseEntity.badRequest().build();
   }
 }

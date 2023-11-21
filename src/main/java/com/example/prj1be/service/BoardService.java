@@ -15,9 +15,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,12 +79,12 @@ public class BoardService {
     return true;
   }
 
-  public Map<String, Object> list(Integer page, String keyword) {
+  public Map<String, Object> list(Integer page, String keyword, String category) {
     Map<String, Object> map = new HashMap<>();
     Map<String, Object> pageInfo = new HashMap<>();
 
 //    int countAll = mapper.countAll();
-    int countAll = mapper.countAll("%" + keyword + "%");
+    int countAll = mapper.countAll("%" + keyword + "%", category);
     int lastPageNumber = (countAll - 1) / 10 + 1;
     int startPageNumber = (page - 1) / 10 * 10 + 1;
     int endPageNumber = startPageNumber + 9;
@@ -105,7 +103,7 @@ public class BoardService {
     }
 
     int from = (page - 1) * 10;
-    map.put("boardList", mapper.selectAll(from, "%" + keyword + "%"));
+    map.put("boardList", mapper.selectAll(from, "%" + keyword + "%", category));
     map.put("pageInfo", pageInfo);
     return map;
   }
@@ -154,8 +152,23 @@ public class BoardService {
     fileMapper.deleteByBoardId(id);
   }
 
-  public boolean update(Integer id, Board board, Member login) {
+  public boolean update(Integer id, Board board, MultipartFile[] files, Member login) throws IOException {
     Board dbBoard = mapper.selectById(id);
+
+    if (board.getIsFileDelete()) deleteFile(id);
+    // 기존 파일 지우기
+    // 새 파일 업로드
+    if (files != null) {
+      deleteFile(id);
+
+      for (MultipartFile file : files) {
+        fileMapper.insert(board.getId(), file.getOriginalFilename());
+
+        // 실제 파일을 S3 bucket에 upload
+        // 일단 local에 저장
+        upload(board.getId(), file);
+      }
+    }
 
     if (board.getWriter().isBlank()) board.setWriter(login.getId());
     if (board.getTitle().isBlank()) board.setTitle(dbBoard.getTitle());

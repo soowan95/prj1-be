@@ -1,7 +1,6 @@
 package com.example.prj1be.dao;
 
 import com.example.prj1be.domain.Board;
-import com.example.prj1be.domain.Member;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -17,6 +16,7 @@ public interface BoardMapper {
   int insert(Board board);
 
   @Select("""
+  <script>
   SELECT b.id, b.title, writer, b.inserted, nickName, 
          COUNT(DISTINCT c.id) `commentCount`, 
          (SELECT COUNT(*) FROM boardlike WHERE boardId = b.id) `likeCount`,
@@ -24,12 +24,21 @@ public interface BoardMapper {
   FROM board b JOIN member m ON b.writer = m.id
     LEFT JOIN comment c ON b.id = c.boardId
     LEFT JOIN boardfile bf ON b.id = bf.boardId
-  WHERE b.content LIKE #{keyword} OR b.title LIKE #{keyword}
+  WHERE
+  <trim prefixOverrides="OR">
+    <if test="category == 'all' || category == 'title'"> 
+      OR title LIKE #{keyword} 
+    </if>
+    <if test="category == 'all' || category == 'content'">
+      OR content LIKE #{keyword}
+    </if>
+  </trim>
   GROUP BY b.id
   ORDER BY b.id DESC 
   LIMIT #{page}, 10
+  </script>
   """)
-  List<Board> selectAll(Integer page, String keyword);
+  List<Board> selectAll(Integer page, String keyword, String category);
 
   @Select("""
   SELECT b.id, title, content, writer, b.inserted, nickName
@@ -46,7 +55,7 @@ public interface BoardMapper {
 
   @Update("""
   UPDATE board
-  SET title = #{board.title}, content = #{board.content}, writer = #{board.writer}, inserted = NOW()
+  SET title = #{board.title}, content = #{board.content}
   WHERE id = #{id}
   """)
   int updateById(Integer id, Board board);
@@ -65,8 +74,18 @@ public interface BoardMapper {
   Integer isLike(Integer id, String memberId);
 
   @Select("""
+  <script>
   SELECT COUNT(*) FROM board
-  WHERE title LIKE #{keyword} OR content LIKE #{keyword}
+  WHERE
+  <trim prefixOverrides="OR">
+    <if test="category == 'all' || category == 'title'"> 
+      OR title LIKE #{keyword} 
+    </if>
+    <if test="category == 'all' || category == 'content'">
+      OR content LIKE #{keyword}
+    </if>
+  </trim>
+  </script>
   """)
-  int countAll(String keyword);
+  int countAll(String keyword, String category);
 }
