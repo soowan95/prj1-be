@@ -38,3 +38,6 @@ out/
 
 ### private property ###
 custom.properties
+
+### react ###
+/src/main/resources/frontend/
